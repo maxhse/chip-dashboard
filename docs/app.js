@@ -69,20 +69,7 @@
   }
 
   /* ---------------- 總覽卡片 ---------------- */
-  function sparkline(seq) {
-    const wrap = EL("div", "spark");
-    const pts = (seq || []).slice(-8);
-    if (!pts.length) return wrap;
-    const max = Math.max(...pts.map((p) => Math.abs(p.v))) || 1;
-    pts.forEach((p) => {
-      const bar = EL("i", sign(p.v));
-      bar.style.height = Math.max(12, (Math.abs(p.v) / max) * 100) + "%";
-      wrap.append(bar);
-    });
-    return wrap;
-  }
-
-  function card(cls, label, dateStr, value, text, unit, sub, seq) {
+  function card(cls, label, dateStr, value, text, unit, sub) {
     const c = EL("div", "s-card cat-" + cls);
     const top = EL("div", "s-top");
     top.append(EL("div", "s-label", label));
@@ -91,10 +78,7 @@
     const val = EL("div", "s-val " + sign(value), text);
     if (unit) val.append(EL("small", null, unit));
     c.append(val);
-    const foot = EL("div", "s-foot");
-    foot.append(EL("div", "s-sub", sub || ""));
-    foot.append(sparkline(seq));
-    c.append(foot);
+    c.append(EL("div", "s-sub", sub || ""));
     return c;
   }
 
@@ -111,19 +95,18 @@
 
     box.append(
       card("flow", "上市外資買賣超", s.dates.twse_foreign, s.twse_foreign,
-        signed(s.twse_foreign), "億", "上市現貨", ser.twse_foreign),
+        signed(s.twse_foreign), "億", "上市現貨"),
       card("flow", "上市投信買賣超", s.dates.twse_trust, s.twse_trust,
-        signed(s.twse_trust), "億", "上市現貨", ser.twse_trust),
+        signed(s.twse_trust), "億", "上市現貨"),
       card("margin", "上市融資增減", s.dates.twse_margin, s.twse_margin_change,
         signed(s.twse_margin_change, 2), "億",
-        "餘額 " + plain(lastOf(ser.twse_margin)) + " 億", null),
+        "餘額 " + plain(lastOf(ser.twse_margin)) + " 億"),
       card("margin", "上櫃融資增減", s.dates.tpex_margin, s.tpex_margin_change,
         signed(s.tpex_margin_change, 2), "億",
-        "餘額 " + plain(lastOf(ser.tpex_margin)) + " 億", null),
+        "餘額 " + plain(lastOf(ser.tpex_margin)) + " 億"),
       card("oi", "外資期貨多空變化", s.dates.tx_foreign_oi, s.tx_foreign_oi_change,
         signedLots(s.tx_foreign_oi_change), "口",
-        "今日淨額 " + (s.tx_foreign_oi == null ? "—" : s.tx_foreign_oi.toLocaleString("en-US")) + " 口",
-        ser.tx_foreign_oi)
+        "今日淨額 " + (s.tx_foreign_oi == null ? "—" : s.tx_foreign_oi.toLocaleString("en-US")) + " 口")
     );
   }
 
@@ -341,8 +324,10 @@
         const tr = EL("tr");
         tr.append(EL("td", "rk", String(i + 1)));
         const nm = EL("td", "nm");
-        nm.append(EL("code", null, r.c), document.createTextNode(r.n));
-        nm.append(EL("span", "mk", r.m === "TWSE" ? "市" : "櫃"));
+        nm.append(EL("code", null, r.c));
+        nm.append(EL("span", "nm-text", r.n));
+        nm.append(EL("span", "mk " + (r.m === "TWSE" ? "mk-tw" : "mk-tp"),
+          r.m === "TWSE" ? "市" : "櫃"));
         tr.append(nm, EL("td", "amt " + cls, signed(r[who], 2)));
         tbody.append(tr);
       });

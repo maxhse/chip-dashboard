@@ -118,13 +118,13 @@ main{max-width:1180px;margin:0 auto;padding:22px 16px 44px}
 
 /* ---------- 總覽卡片 ---------- */
 .summary-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));
+  display:grid;grid-template-columns:repeat(5,1fr);
   gap:14px;margin-top:16px;
 }
 .s-card{
-  background:var(--card);border:1px solid var(--rule);border-radius:10px;
-  border-top:3px solid var(--cat);padding:15px 16px 14px;
-  display:flex;flex-direction:column;gap:9px;
+  background:var(--card);border:1px solid var(--rule);border-radius:14px;
+  border-top:3px solid var(--cat);padding:16px 18px 15px;
+  display:flex;flex-direction:column;gap:10px;min-height:126px;
 }
 .s-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .s-label{font-size:12.5px;color:var(--ink);font-weight:500}
@@ -134,12 +134,7 @@ main{max-width:1180px;margin:0 auto;padding:22px 16px 44px}
 }
 .s-val{font-family:var(--mono);font-size:26px;font-weight:600;line-height:1.1}
 .s-val small{font-family:var(--sans);font-size:13px;font-weight:400;margin-left:4px}
-.s-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin-top:auto}
-.s-sub{font-size:11px;color:var(--muted);font-family:var(--mono)}
-.spark{display:flex;align-items:flex-end;gap:2px;height:20px;flex:none}
-.spark i{display:block;width:4px;background:var(--rule);border-radius:1px;min-height:2px}
-.spark i.buy{background:var(--buy);opacity:.75}
-.spark i.sell{background:var(--sell);opacity:.75}
+.s-sub{font-size:11.5px;color:var(--muted);font-family:var(--mono);margin-top:auto}
 
 .cat-flow{--cat:var(--c-flow)}
 .cat-margin{--cat:var(--c-margin)}
@@ -198,24 +193,30 @@ main{max-width:1180px;margin:0 auto;padding:22px 16px 44px}
 .rank-head{font-size:12.5px;padding:8px 12px;color:#fff;border-radius:7px 7px 0 0}
 .rank-head.buy{background:var(--buy)}
 .rank-head.sell{background:var(--sell)}
-.rank-table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+.rank-table{width:100%;border-collapse:collapse;font-size:14.5px}
 .rank-table thead th{
-  font-size:10.5px;font-weight:500;color:var(--muted);padding:6px 10px;
-  border-bottom:1px solid var(--rule);text-align:left;
+  font-size:11px;font-weight:500;color:var(--muted);padding:7px 10px;
+  border-bottom:1px solid var(--rule);text-align:left;white-space:nowrap;
 }
-.rank-table thead th.rk{width:44px;text-align:center}
-.rank-table thead th.amt{text-align:right;width:112px}
-.rank-table td{padding:6px 10px;border-bottom:1px solid var(--rule-soft)}
+.rank-table thead th.rk{width:46px;text-align:center}
+.rank-table thead th.amt{text-align:right;width:124px}
+.rank-table td{padding:8px 10px;border-bottom:1px solid var(--rule-soft)}
 .rank-table tbody tr:nth-child(even){background:#fafbfc}
 .rank-table tbody tr:hover{background:#eef4fa}
-.rank-table td.rk{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:center}
-.rank-table td.nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank-table td.rk{font-family:var(--mono);font-size:12px;color:var(--muted);text-align:center}
+.rank-table td.nm{white-space:nowrap}
 .rank-table td.nm code{
-  font-family:var(--mono);font-size:11px;color:var(--muted);
-  border:1px solid var(--rule);border-radius:3px;padding:1px 4px;margin-right:8px;
+  font-family:var(--mono);font-size:12px;color:var(--muted);
+  border:1px solid var(--rule);border-radius:4px;padding:2px 5px;margin-right:9px;
 }
-.rank-table td.nm .mk{font-size:10px;color:var(--muted);margin-left:6px}
-.rank-table td.amt{text-align:right;font-family:var(--mono);font-weight:600;font-variant-numeric:tabular-nums}
+.rank-table td.nm .nm-text{font-weight:500}
+.rank-table td.nm .mk{
+  font-size:11px;margin-left:8px;border-radius:4px;padding:1px 6px;
+  border:1px solid currentColor;
+}
+.rank-table td.nm .mk-tw{color:var(--c-flow)}
+.rank-table td.nm .mk-tp{color:var(--c-margin)}
+.rank-table td.amt{text-align:right;font-family:var(--mono);font-weight:600;font-size:14.5px;font-variant-numeric:tabular-nums}
 .rank-empty{color:var(--muted);font-size:12.5px;padding:12px 10px;text-align:left}
 
 .method{margin-top:20px;border-top:1px solid var(--rule-soft);padding-top:12px}
@@ -232,6 +233,9 @@ footer{max-width:1180px;margin:0 auto;padding:0 16px 44px;color:var(--muted);fon
 footer p{margin:0 0 4px}
 #built{font-family:var(--mono)}
 
+@media (max-width:1080px){
+  .summary-grid{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+}
 @media (max-width:640px){
   .banner{padding:16px 14px 12px}
   main{padding:16px 10px 30px}

@@ -30,6 +30,17 @@ def _find(fields: list[str], *must, exclude=()) -> int:
     raise KeyError(f"找不到欄位 {must!r} (exclude={exclude!r})；現有欄位：{fields}")
 
 
+def _find_any(fields: list[str], *candidates):
+    """candidates 是多組關鍵字 tuple，依序嘗試，回傳第一組找得到的。"""
+    last = None
+    for c in candidates:
+        try:
+            return _find(fields, *c)
+        except KeyError as e:  # noqa: PERF203
+            last = e
+    raise last
+
+
 def _pick_table(payload: dict, *must_fields):
     """從 tables[] 裡挑出含有指定欄位的那張表。"""
     for t in payload.get("tables") or []:
@@ -69,7 +80,7 @@ def twse_institutional(s, d: date) -> dict:
         raise ValueError("BFI82U 無資料（可能非交易日或尚未產製）")
 
     fields = j.get("fields") or ["單位名稱", "買進金額", "賣出金額", "買賣超"]
-    net_i = _find(fields, "買賣超")
+    net_i = _find_any(fields, ("買賣超",), ("買賣差額",))
     rows = _label_rows(j["data"])
 
     # 外資 = 外資及陸資(不含外資自營商) + 外資自營商
@@ -89,7 +100,7 @@ def tpex_institutional(s, d: date) -> dict:
         {"type": "Daily", "date": d.strftime("%Y/%m/%d"), "response": "json"},
     )
     t = _pick_table(j, "買賣超")
-    net_i = _find(t["fields"], "買賣超")
+    net_i = _find_any(t["fields"], ("買賣超",), ("買賣差額",))
     rows = _label_rows(t["data"])
 
     foreign = _sum_by_label(rows, ("外資及陸資", "外資自營商"), net_i)
@@ -101,7 +112,11 @@ def tpex_institutional(s, d: date) -> dict:
 
 # ---------------------------------------------------------------- 3. 上市融資
 def twse_margin(s, d: date) -> dict:
-    """證交所融資融券彙總 (MI_MARGN, selectType=MS)。回傳元。"""
+    """證交所融資融券彙總 (MI_MARGN, selectType=MS)。回傳元。
+
+    注意：這張表的欄位名稱是通用的「項目/買進/賣出/前日餘額/今日餘額」，
+    「融資金額」是某一列的內容（項目欄的值），不是欄位名稱，所以要找列而不是找欄。
+    """
     j = get_json(
         s,
         "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN",
@@ -110,21 +125,19 @@ def twse_margin(s, d: date) -> dict:
     if j.get("stat") != "OK":
         raise ValueError("MI_MARGN 無資料（可能非交易日或尚未產製）")
 
-    t = _pick_table(j, "融資")
-    fields = t["fields"]
-    bal_i = _find(fields, "今日餘額")
-    prev_i = _find(fields, "前日餘額")
-    rows = _label_rows(t["data"])
-
-    key = next((k for k in rows if "融資金額" in k), None)
-    if key is None:
-        key = next((k for k in rows if "融資" in k and "券" not in k), None)
-    if key is None:
-        raise KeyError(f"融資列找不到，現有：{list(rows)}")
-
-    bal = (num(rows[key][bal_i], 0) or 0) * TWSE_MARGIN_VALUE_UNIT
-    prev = (num(rows[key][prev_i], 0) or 0) * TWSE_MARGIN_VALUE_UNIT
-    return {"balance": bal, "prev": prev, "change": bal - prev}
+    for t in j.get("tables") or []:
+        fields = t.get("fields") or []
+        for row in t.get("data") or []:
+            if not row:
+                continue
+            label = str(row[0]).replace(" ", "").strip()
+            if "融資金額" in label:
+                bal_i = _find(fields, "今日餘額")
+                prev_i = _find(fields, "前日餘額")
+                bal = (num(row[bal_i], 0) or 0) * TWSE_MARGIN_VALUE_UNIT
+                prev = (num(row[prev_i], 0) or 0) * TWSE_MARGIN_VALUE_UNIT
+                return {"balance": bal, "prev": prev, "change": bal - prev}
+    raise KeyError("MI_MARGN 找不到融資金額列")
 
 
 # ---------------------------------------------------------------- 4. 上櫃融資
@@ -158,12 +171,12 @@ def tpex_margin(s, d: date) -> dict:
 
 # ---------------------------------------------------------------- 5. 台指期
 def taifex_tx_foreign(s, d: date) -> dict:
-    """期交所三大法人台股期貨(TX)未平倉。回傳外資多空淨額口數與契約金額(元)。"""
+    """期交所三大法人台股期貨(TXF)未平倉。回傳外資多空淨額口數與契約金額(元)。"""
     q = d.strftime("%Y/%m/%d")
     raw = post_bytes(
         s,
         "https://www.taifex.com.tw/cht/3/futContractsDateDown",
-        {"queryStartDate": q, "queryEndDate": q, "commodityId": "TX"},
+        {"queryStartDate": q, "queryEndDate": q, "commodityId": "TXF"},
     )
     text = raw.decode("big5", errors="replace")
     if "查無資料" in text or "日期時間錯誤" in text:
@@ -253,6 +266,15 @@ def _twse_stock_net(s, d: date):
 
 
 def _tpex_stock_net(s, d: date):
+    """櫃買中心個股三大法人買賣超。
+
+    這張表的『欄位名稱』是「買進股數/賣出股數/買賣超股數」重複七組，
+    沒有把投資人別放進欄位名稱裡（跟證交所 T86 不一樣），所以沒辦法用名稱去分辨
+    哪一組是外資、哪一組是投信，只能按照官方固定的欄位順序取值：
+      0-2  外資及陸資(不含外資自營商)   3-5  外資自營商        6-8  外資及陸資(合計)
+      9-11 投信                        12-14 自營商(自行買賣)  15-17 自營商(避險)
+      18-20 自營商(合計)                21   三大法人買賣超股數合計
+    """
     j = get_json(
         s,
         "https://www.tpex.org.tw/www/zh-tw/insti/dailyTrade",
@@ -260,23 +282,17 @@ def _tpex_stock_net(s, d: date):
          "response": "json"},
     )
     t = _pick_table(j, "買賣超")
-    f = t["fields"]
-    si, ni = _find(f, "代號"), _find(f, "名稱")
-    ti = _find(f, "投信", "買賣超")
-    try:
-        fi = _find(f, "外資及陸資買賣超股數", exclude=("不含", "自營商"))
-        fdi = None
-    except KeyError:
-        fi = _find(f, "外資", "買賣超", exclude=("自營商",))
-        fdi = None
     for r in t["data"]:
-        code = str(r[si]).strip()
+        code = str(r[0]).strip()
         if not code or len(code) > 6:
             continue
-        fnet = num(r[fi], 0) or 0
-        if fdi is not None:
-            fnet += num(r[fdi], 0) or 0
-        yield code, str(r[ni]).strip(), fnet, num(r[ti], 0) or 0
+        name = str(r[1]).strip()
+        values = r[2:]
+        if len(values) < 12:
+            continue
+        fnet = num(values[8], 0) or 0   # 外資及陸資(合計) 買賣超股數
+        tnet = num(values[11], 0) or 0  # 投信 買賣超股數
+        yield code, name, fnet, tnet
 
 
 def stock_flows(s, d: date) -> list[dict]:

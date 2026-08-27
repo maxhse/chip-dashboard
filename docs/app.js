@@ -155,10 +155,6 @@
       lb.textContent = fmtTick(t);
       svg.append(lb);
     });
-    const u = sv("text", { x: L - 7, y: T - 3, class: "ax-unit", "text-anchor": "end" });
-    u.textContent = unitLabel;
-    svg.append(u);
-
     const slot = (W - L - R) / points.length;
     const bw = Math.min(26, slot * 0.42);
     points.forEach((p, i) => {
@@ -180,9 +176,11 @@
     return svg;
   }
 
-  /** 折線圖：hover 圓點顯示數值 */
-  function lineChart(points, unitLabel, accent, toDisplay) {
-    const W = 560, H = 230, L = 58, R = 12, T = 14, B = 26;
+  /** 折線圖：hover 圓點顯示數值。wide=true 用於整排寬度的卡片，
+   *  viewBox 加寬避免被瀏覽器等比例放大導致文字過大。 */
+  function lineChart(points, unitLabel, accent, toDisplay, wide) {
+    const W = wide ? 1040 : 560, H = wide ? 200 : 230;
+    const L = 58, R = 16, T = 16, B = 26;
     const svg = sv("svg", { viewBox: `0 0 ${W} ${H}`, role: "img" });
     if (points.length < 2) return svg;
 
@@ -198,9 +196,6 @@
       lb.textContent = fmtTick(t);
       svg.append(lb);
     });
-    const u = sv("text", { x: L - 7, y: T - 3, class: "ax-unit", "text-anchor": "end" });
-    u.textContent = unitLabel;
-    svg.append(u);
 
     const d = vals.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
     svg.append(sv("path", { d, fill: "none", stroke: accent, "stroke-width": 1.9 }));
@@ -266,7 +261,7 @@
           const last = pts.length ? pts[pts.length - 1].v : null;
           box.append(chartCard("margin", name, null,
             { text: plain(last, 2) + " 億元" },
-            lineChart(pts, "億元", "var(--c-margin)", toOku), true));
+            lineChart(pts, "億元", "var(--c-margin)", toOku, true), true));
         });
     } else {
       const pts = cut(S.tx_foreign_oi);
@@ -274,7 +269,7 @@
       box.append(chartCard("oi", "外資未平倉淨額", null,
         { text: (last == null ? "—" : last.toLocaleString("en-US")) + " 口",
           cls: sign(last) },
-        lineChart(pts, "口", "var(--c-oi)", asIs), true));
+        lineChart(pts, "口", "var(--c-oi)", asIs, true), true));
     }
   }
 

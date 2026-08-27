@@ -1,49 +1,45 @@
 {
- "_checked_at": "2026-08-27T17:14:38+08:00",
+ "_checked_at": "2026-08-27T18:10:29+08:00",
  "stock_flows": {
-  "data_date": null,
-  "error": "2026-08-27: \"找不到欄位 ('投信', '買賣超') (exclude=())；現有欄位：['代號', '名稱', '買進股數', '賣出股數', '買賣超股數', '買進股數', '賣出股數', '買賣超股數', '買進股數', '賣出股數', '買賣超股數', '買進股數', '賣出股數', '買賣超股數', '買進股數', '賣出股數', '買賣超股數', '買進股數', '賣出股數', '買賣超股數', '買進股數', '賣出股數', '買賣超股數', '三大法人買賣超股數合計']\"",
-  "failed_at": "2026-08-27T17:14:38+08:00",
+  "data_date": "2026-08-27",
+  "error": null,
   "label": "個股買賣超排行",
-  "ok": false,
-  "updated_at": null
+  "ok": true,
+  "updated_at": "2026-08-27T18:10:29+08:00"
  },
  "taifex_tx": {
-  "data_date": null,
-  "error": "2026-08-27: TAIFEX 回傳格式異常",
-  "failed_at": "2026-08-27T17:14:08+08:00",
+  "data_date": "2026-08-27",
+  "error": null,
   "label": "台指期外資未平倉",
-  "ok": false,
-  "updated_at": null
+  "ok": true,
+  "updated_at": "2026-08-27T18:10:23+08:00"
  },
  "tpex_insti": {
   "data_date": "2026-08-27",
   "error": null,
   "label": "櫃買三大法人",
   "ok": true,
-  "updated_at": "2026-08-27T17:14:04+08:00"
+  "updated_at": "2026-08-27T18:10:20+08:00"
  },
  "tpex_margin": {
   "data_date": "2026-08-26",
   "error": null,
   "label": "上櫃融資餘額",
   "ok": true,
-  "updated_at": "2026-08-27T17:14:06+08:00"
+  "updated_at": "2026-08-27T18:10:22+08:00"
  },
  "twse_insti": {
-  "data_date": null,
-  "error": "2026-08-27: \"找不到欄位 ('買賣超',) (exclude=())；現有欄位：['單位名稱', '買進金額', '賣出金額', '買賣差額']\"",
-  "failed_at": "2026-08-27T17:14:03+08:00",
+  "data_date": "2026-08-27",
+  "error": null,
   "label": "證交所三大法人",
-  "ok": false,
-  "updated_at": null
+  "ok": true,
+  "updated_at": "2026-08-27T18:10:20+08:00"
  },
  "twse_margin": {
-  "data_date": null,
-  "error": "2026-08-27: MI_MARGN 無資料（可能非交易日或尚未產製）",
-  "failed_at": "2026-08-27T17:14:05+08:00",
+  "data_date": "2026-08-26",
+  "error": null,
   "label": "上市融資餘額",
-  "ok": false,
-  "updated_at": null
+  "ok": true,
+  "updated_at": "2026-08-27T18:10:21+08:00"
  }
 }

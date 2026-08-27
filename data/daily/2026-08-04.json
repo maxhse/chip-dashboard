@@ -1,5 +1,9 @@
 {
  "date": "2026-08-04",
+ "taifex_tx": {
+  "net_oi_lots": -87858,
+  "net_oi_value": -761750391000
+ },
  "tpex_insti": {
   "dealer": 160988074,
   "foreign": -9243839678,
@@ -10,5 +14,16 @@
   "balance": 168974654000,
   "change": 1966992000,
   "prev": 167007662000
+ },
+ "twse_insti": {
+  "dealer": -19428736709,
+  "foreign": -5731532826,
+  "total": 2004890525,
+  "trust": 27165160060
+ },
+ "twse_margin": {
+  "balance": 521134665000,
+  "change": 6379312000,
+  "prev": 514755353000
  }
 }

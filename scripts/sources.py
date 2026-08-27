@@ -68,6 +68,32 @@ def _sum_by_label(table_rows, wanted, value_idx):
     return total
 
 
+def _cat_amount(rows, value_idx, total_kw, part_specs):
+    """取一個投資人分類的買賣超金額。
+
+    這張表裡「外資及陸資合計」跟它底下的子項「外資及陸資(不含自營商)」
+    標籤都含有「外資及陸資」，用單一關鍵字比對會把總計跟子項重複加總。
+    這裡改成優先直接抓官方本來就算好的「合計」列；只有真的沒有合計列時，
+    才退回自己加總子項——子項還要排除關鍵字，因為「外資自營商」本身
+    也是「(不含外資自營商)」這個字串的子字串，一樣會重複比對到同一列。
+
+    part_specs: [(must_keywords_tuple, exclude_keywords_tuple), ...]
+    """
+    for label, row in rows.items():
+        if all(k in label for k in total_kw):
+            return num(row[value_idx], 0) or 0
+    total, hit = 0, False
+    for must, exclude in part_specs:
+        for label, row in rows.items():
+            if all(k in label for k in must) and not any(x in label for x in exclude):
+                total += num(row[value_idx], 0) or 0
+                hit = True
+                break
+    if not hit:
+        raise KeyError(f"找不到 {total_kw!r} 或其子項，現有列：{list(rows)}")
+    return total
+
+
 # ---------------------------------------------------------------- 1. 上市法人
 def twse_institutional(s, d: date) -> dict:
     """證交所三大法人買賣金額統計表 (BFI82U)。單位：元。"""
@@ -83,10 +109,17 @@ def twse_institutional(s, d: date) -> dict:
     net_i = _find_any(fields, ("買賣超",), ("買賣差額",))
     rows = _label_rows(j["data"])
 
-    # 外資 = 外資及陸資(不含外資自營商) + 外資自營商
-    foreign = _sum_by_label(rows, ("外資及陸資", "外資自營商"), net_i)
-    trust = _sum_by_label(rows, ("投信",), net_i)
-    dealer = _sum_by_label(rows, ("自營商(自行買賣)", "自營商(避險)"), net_i)
+    # 外資 = 外資及陸資(不含外資自營商) + 外資自營商；官方若有現成合計列則直接用它，
+    # 避免跟子項重複加總。自營商同理。
+    foreign = _cat_amount(rows, net_i, ("外資及陸資", "合計"), [
+        (("外資及陸資", "不含"), ()),
+        (("外資自營商",), ("不含",)),
+    ])
+    trust = _cat_amount(rows, net_i, ("投信",), [(("投信",), ())])
+    dealer = _cat_amount(rows, net_i, ("自營商", "合計"), [
+        (("自營商", "自行買賣"), ()),
+        (("自營商", "避險"), ()),
+    ])
     return {"foreign": foreign, "trust": trust, "dealer": dealer,
             "total": foreign + trust + dealer}
 
@@ -103,9 +136,15 @@ def tpex_institutional(s, d: date) -> dict:
     net_i = _find_any(t["fields"], ("買賣超",), ("買賣差額",))
     rows = _label_rows(t["data"])
 
-    foreign = _sum_by_label(rows, ("外資及陸資", "外資自營商"), net_i)
-    trust = _sum_by_label(rows, ("投信",), net_i)
-    dealer = _sum_by_label(rows, ("自營商(自行買賣)", "自營商(避險)"), net_i)
+    foreign = _cat_amount(rows, net_i, ("外資及陸資", "合計"), [
+        (("外資及陸資", "不含"), ()),
+        (("外資自營商",), ("不含",)),
+    ])
+    trust = _cat_amount(rows, net_i, ("投信",), [(("投信",), ())])
+    dealer = _cat_amount(rows, net_i, ("自營商", "合計"), [
+        (("自營商", "自行買賣"), ()),
+        (("自營商", "避險"), ()),
+    ])
     return {"foreign": foreign, "trust": trust, "dealer": dealer,
             "total": foreign + trust + dealer}
 

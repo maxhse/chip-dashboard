@@ -10,11 +10,12 @@
 
   const OKU = 1e8;
   const sign = (v) => (v == null ? "flat" : v > 0 ? "buy" : v < 0 ? "sell" : "flat");
-  const fmtOku = (v, dp = 1) =>
+  const signed = (v, dp = 1) =>
     v == null ? "—" : (v >= 0 ? "+" : "−") + Math.abs(v / OKU).toFixed(dp);
-  const fmtLots = (v) =>
+  const signedLots = (v) =>
     v == null ? "—" : (v >= 0 ? "+" : "−") + Math.abs(v).toLocaleString("en-US");
   const plain = (v, dp = 1) => (v == null ? "—" : (v / OKU).toFixed(dp));
+  const md = (iso) => (iso ? iso.slice(5).replace("-", "/") : "");
 
   const shortTime = (iso) => {
     if (!iso) return "—";
@@ -24,10 +25,29 @@
     return `${p(d.getMonth() + 1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
   };
 
-  let DATA = null;
-  let win = 10;
-  let who = "f";
-  let rankWin = 1;
+  let DATA = null, win = 10, cat = "flow", who = "f", rankWin = 1;
+
+  /* ---------------- 提示框 ---------------- */
+  const tip = $("#tip");
+  function showTip(e, html) {
+    tip.innerHTML = html;
+    tip.classList.add("on");
+    tip.setAttribute("aria-hidden", "false");
+    const r = tip.getBoundingClientRect();
+    let x = e.clientX + 14, y = e.clientY - r.height - 10;
+    if (x + r.width > innerWidth - 8) x = e.clientX - r.width - 14;
+    if (y < 8) y = e.clientY + 16;
+    tip.style.left = x + "px";
+    tip.style.top = y + "px";
+  }
+  function hideTip() {
+    tip.classList.remove("on");
+    tip.setAttribute("aria-hidden", "true");
+  }
+  function bindTip(node, html) {
+    node.addEventListener("mousemove", (e) => showTip(e, html));
+    node.addEventListener("mouseleave", hideTip);
+  }
 
   /* ---------------- 資料來源狀態列 ---------------- */
   function renderFeeds(status) {
@@ -48,7 +68,7 @@
       });
   }
 
-  /* ---------------- 摘要卡（分類色 + 迷你走勢） ---------------- */
+  /* ---------------- 總覽卡片 ---------------- */
   function sparkline(seq) {
     const wrap = EL("div", "spark");
     const pts = (seq || []).slice(-8);
@@ -56,20 +76,26 @@
     const max = Math.max(...pts.map((p) => Math.abs(p.v))) || 1;
     pts.forEach((p) => {
       const bar = EL("i", sign(p.v));
-      bar.style.height = Math.max(10, (Math.abs(p.v) / max) * 100) + "%";
+      bar.style.height = Math.max(12, (Math.abs(p.v) / max) * 100) + "%";
       wrap.append(bar);
     });
     return wrap;
   }
 
-  function summaryCard(cat, label, dateStr, value, display, seq) {
-    const card = EL("div", "s-card cat-" + cat);
-    card.append(EL("div", "s-label", label));
-    if (dateStr) card.append(EL("div", "s-date", dateStr));
-    const val = EL("div", "s-val num " + sign(value), display.text);
-    if (display.unit) val.append(EL("small", null, display.unit));
-    card.append(val, sparkline(seq));
-    return card;
+  function card(cls, label, dateStr, value, text, unit, sub, seq) {
+    const c = EL("div", "s-card cat-" + cls);
+    const top = EL("div", "s-top");
+    top.append(EL("div", "s-label", label));
+    if (dateStr) top.append(EL("div", "s-date", md(dateStr)));
+    c.append(top);
+    const val = EL("div", "s-val " + sign(value), text);
+    if (unit) val.append(EL("small", null, unit));
+    c.append(val);
+    const foot = EL("div", "s-foot");
+    foot.append(EL("div", "s-sub", sub || ""));
+    foot.append(sparkline(seq));
+    c.append(foot);
+    return c;
   }
 
   function renderSummary() {
@@ -81,123 +107,192 @@
     $("#today-date").textContent = dates.length
       ? `最近交易日 ${dates[dates.length - 1]}` : "尚無資料";
 
+    const lastOf = (a) => (a && a.length ? a[a.length - 1].v : null);
+
     box.append(
-      summaryCard("flow", "上市外資買賣超", s.dates.twse_foreign, s.twse_foreign,
-        { text: fmtOku(s.twse_foreign), unit: "億" }, ser.twse_foreign),
-      summaryCard("flow", "上市投信買賣超", s.dates.twse_trust, s.twse_trust,
-        { text: fmtOku(s.twse_trust), unit: "億" }, ser.twse_trust),
-      summaryCard("margin", "上市融資增減", s.dates.twse_margin, s.twse_margin_change,
-        { text: fmtOku(s.twse_margin_change, 2), unit: "億" }, null),
-      summaryCard("margin", "上櫃融資增減", s.dates.tpex_margin, s.tpex_margin_change,
-        { text: fmtOku(s.tpex_margin_change, 2), unit: "億" }, null),
-      summaryCard("oi", "外資期貨未平倉淨額", s.dates.tx_foreign_oi, s.tx_foreign_oi,
-        { text: fmtLots(s.tx_foreign_oi), unit: "口" }, ser.tx_foreign_oi),
-      summaryCard("oi", "較前一日增減", s.dates.tx_foreign_oi, s.tx_foreign_oi_change,
-        { text: fmtLots(s.tx_foreign_oi_change), unit: "口" }, null)
+      card("flow", "上市外資買賣超", s.dates.twse_foreign, s.twse_foreign,
+        signed(s.twse_foreign), "億", "上市現貨", ser.twse_foreign),
+      card("flow", "上市投信買賣超", s.dates.twse_trust, s.twse_trust,
+        signed(s.twse_trust), "億", "上市現貨", ser.twse_trust),
+      card("margin", "上市融資增減", s.dates.twse_margin, s.twse_margin_change,
+        signed(s.twse_margin_change, 2), "億",
+        "餘額 " + plain(lastOf(ser.twse_margin)) + " 億", null),
+      card("margin", "上櫃融資增減", s.dates.tpex_margin, s.tpex_margin_change,
+        signed(s.tpex_margin_change, 2), "億",
+        "餘額 " + plain(lastOf(ser.tpex_margin)) + " 億", null),
+      card("oi", "外資期貨多空變化", s.dates.tx_foreign_oi, s.tx_foreign_oi_change,
+        signedLots(s.tx_foreign_oi_change), "口",
+        "今日淨額 " + (s.tx_foreign_oi == null ? "—" : s.tx_foreign_oi.toLocaleString("en-US")) + " 口",
+        ser.tx_foreign_oi)
     );
   }
 
-  /* ---------------- SVG 圖 ---------------- */
+  /* ---------------- SVG 圖表 ---------------- */
   const NS = "http://www.w3.org/2000/svg";
-  const svgEl = (t, attrs) => {
+  const sv = (t, a) => {
     const e = document.createElementNS(NS, t);
-    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    for (const k in a) e.setAttribute(k, a[k]);
     return e;
   };
 
-  function barChart(points) {
-    const W = 320, H = 92, PAD = 4;
-    const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, role: "img" });
+  // 好看的刻度間距
+  function niceTicks(lo, hi, count = 5) {
+    if (lo === hi) { lo -= 1; hi += 1; }
+    const raw = (hi - lo) / count;
+    const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    const norm = raw / mag;
+    const step = (norm >= 5 ? 10 : norm >= 2 ? 5 : norm >= 1 ? 2 : 1) * mag;
+    const start = Math.floor(lo / step) * step;
+    const end = Math.ceil(hi / step) * step;
+    const out = [];
+    for (let v = start; v <= end + step / 2; v += step) out.push(+v.toFixed(10));
+    return out;
+  }
+
+  const fmtTick = (v) =>
+    Math.abs(v) >= 1000 ? v.toLocaleString("en-US") : String(+v.toFixed(2));
+
+  /** 長條圖：零軸置中，紅買綠賣，hover 顯示數值 */
+  function barChart(points, unitLabel, toDisplay) {
+    const W = 560, H = 230, L = 52, R = 12, T = 14, B = 26;
+    const svg = sv("svg", { viewBox: `0 0 ${W} ${H}`, role: "img" });
     if (!points.length) return svg;
 
-    const max = Math.max(...points.map((p) => Math.abs(p.v))) || 1;
-    const mid = H / 2;
-    const bw = Math.max(2, (W - PAD * 2) / points.length - 2);
+    const vals = points.map((p) => toDisplay(p.v));
+    const ticks = niceTicks(Math.min(0, ...vals), Math.max(0, ...vals));
+    const lo = ticks[0], hi = ticks[ticks.length - 1];
+    const y = (v) => T + (1 - (v - lo) / (hi - lo)) * (H - T - B);
 
-    svg.append(svgEl("line", {
-      x1: 0, y1: mid, x2: W, y2: mid, stroke: "var(--rule)", "stroke-width": 1,
-    }));
+    ticks.forEach((t) => {
+      svg.append(sv("line", {
+        x1: L, y1: y(t), x2: W - R, y2: y(t),
+        class: t === 0 ? "ax-zero" : "ax-line",
+      }));
+      const lb = sv("text", { x: L - 7, y: y(t) + 3, class: "ax-text", "text-anchor": "end" });
+      lb.textContent = fmtTick(t);
+      svg.append(lb);
+    });
+    const u = sv("text", { x: L - 7, y: T - 3, class: "ax-unit", "text-anchor": "end" });
+    u.textContent = unitLabel;
+    svg.append(u);
+
+    const slot = (W - L - R) / points.length;
+    const bw = Math.min(26, slot * 0.42);
     points.forEach((p, i) => {
-      const x = PAD + i * ((W - PAD * 2) / points.length);
-      const h = (Math.abs(p.v) / max) * (mid - 6);
-      const rect = svgEl("rect", {
-        x, y: p.v >= 0 ? mid - h : mid, width: bw, height: Math.max(h, 0.7),
-        fill: p.v >= 0 ? "var(--buy)" : "var(--sell)",
+      const cx = L + slot * (i + 0.5);
+      const v = toDisplay(p.v);
+      const y0 = y(0), y1 = y(v);
+      const rect = sv("rect", {
+        x: cx - bw / 2, y: Math.min(y0, y1), width: bw,
+        height: Math.max(Math.abs(y1 - y0), 1),
+        fill: v >= 0 ? "var(--buy)" : "var(--sell)", rx: 1, class: "bar",
       });
-      const tip = document.createElementNS(NS, "title");
-      tip.textContent = `${p.d}　${(p.v / OKU).toFixed(2)} 億`;
-      rect.append(tip);
+      bindTip(rect, `${p.d}<b>${(v >= 0 ? "+" : "−") + Math.abs(v).toFixed(2)} ${unitLabel}</b>`);
       svg.append(rect);
+
+      const lb = sv("text", { x: cx, y: H - B + 15, class: "ax-text", "text-anchor": "middle" });
+      lb.textContent = md(p.d);
+      svg.append(lb);
     });
     return svg;
   }
 
-  function lineChart(points, accent) {
-    const W = 320, H = 92, PAD = 6;
-    const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, role: "img" });
+  /** 折線圖：hover 圓點顯示數值 */
+  function lineChart(points, unitLabel, accent, toDisplay) {
+    const W = 560, H = 230, L = 58, R = 12, T = 14, B = 26;
+    const svg = sv("svg", { viewBox: `0 0 ${W} ${H}`, role: "img" });
     if (points.length < 2) return svg;
 
-    const vs = points.map((p) => p.v);
-    const lo = Math.min(...vs), hi = Math.max(...vs);
-    const span = hi - lo || 1;
-    const x = (i) => PAD + (i * (W - PAD * 2)) / (points.length - 1);
-    const y = (v) => PAD + (1 - (v - lo) / span) * (H - PAD * 2);
-    const d = points.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(p.v).toFixed(1)}`).join("");
+    const vals = points.map((p) => toDisplay(p.v));
+    const ticks = niceTicks(Math.min(...vals), Math.max(...vals));
+    const lo = ticks[0], hi = ticks[ticks.length - 1];
+    const x = (i) => L + (i * (W - L - R)) / (points.length - 1);
+    const y = (v) => T + (1 - (v - lo) / (hi - lo)) * (H - T - B);
 
-    svg.append(svgEl("path", {
-      d: `${d}L${x(points.length - 1)},${H - PAD}L${x(0)},${H - PAD}Z`,
-      fill: accent, opacity: .13,
-    }));
-    svg.append(svgEl("path", { d, fill: "none", stroke: accent, "stroke-width": 1.8 }));
-    const last = svgEl("circle", { cx: x(points.length - 1), cy: y(vs[vs.length - 1]), r: 3, fill: accent });
-    const tip = document.createElementNS(NS, "title");
-    tip.textContent = `${points[points.length - 1].d}`;
-    last.append(tip);
-    svg.append(last);
+    ticks.forEach((t) => {
+      svg.append(sv("line", { x1: L, y1: y(t), x2: W - R, y2: y(t), class: "ax-line" }));
+      const lb = sv("text", { x: L - 7, y: y(t) + 3, class: "ax-text", "text-anchor": "end" });
+      lb.textContent = fmtTick(t);
+      svg.append(lb);
+    });
+    const u = sv("text", { x: L - 7, y: T - 3, class: "ax-unit", "text-anchor": "end" });
+    u.textContent = unitLabel;
+    svg.append(u);
+
+    const d = vals.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
+    svg.append(sv("path", { d, fill: "none", stroke: accent, "stroke-width": 1.9 }));
+
+    points.forEach((p, i) => {
+      const v = vals[i];
+      const c = sv("circle", {
+        cx: x(i), cy: y(v), r: 3.6, fill: "#fff",
+        stroke: accent, "stroke-width": 1.8, class: "dot",
+      });
+      bindTip(c, `${p.d}<b>${fmtTick(v)} ${unitLabel}</b>`);
+      svg.append(c);
+      const lb = sv("text", { x: x(i), y: H - B + 15, class: "ax-text", "text-anchor": "middle" });
+      lb.textContent = md(p.d);
+      svg.append(lb);
+    });
     return svg;
   }
 
-  function chartCard(cat, eyebrow, title, sub, node) {
-    const c = EL("div", "chart cat-" + cat);
-    c.append(EL("p", "eyebrow", eyebrow), EL("h3", null, title), EL("p", "sub", sub), node);
+  function chartCard(clsCat, name, marketTag, total, node, full) {
+    const c = EL("div", "chart cat-" + clsCat + (full ? " full" : ""));
+    const head = EL("div", "chart-head");
+    const nm = EL("div", "chart-name");
+    if (marketTag) nm.append(EL("em", null, marketTag + "｜"));
+    nm.append(document.createTextNode(name));
+    head.append(nm, EL("div", "chart-total " + (total.cls || ""), total.text));
+    c.append(head, node);
     return c;
   }
+
+  const CATS = {
+    flow: { eyebrow: "INSTITUTIONAL FLOW", title: (n) => `近 ${n} 日上市櫃法人買賣超` },
+    margin: { eyebrow: "MARGIN BALANCE", title: (n) => `近 ${n} 日上市櫃融資餘額` },
+    oi: { eyebrow: "FUTURES OPEN INTEREST", title: (n) => `近 ${n} 日外資期貨未平倉淨額` },
+  };
 
   function renderCharts() {
     const box = $("#charts");
     box.textContent = "";
+    hideTip();
     const S = DATA.series, W = DATA.windows[String(win)] || {};
     const cut = (a) => (a || []).slice(-win);
+    const toOku = (v) => v / OKU;
+    const asIs = (v) => v;
 
-    const flows = [
-      ["上市 外資買賣超", "twse_foreign"],
-      ["上市 投信買賣超", "twse_trust"],
-      ["上櫃 外資買賣超", "tpex_foreign"],
-      ["上櫃 投信買賣超", "tpex_trust"],
-    ];
-    flows.forEach(([label, key]) => {
-      const pts = cut(S[key]);
-      const sum = W[key];
-      box.append(chartCard("flow", "INSTITUTIONAL FLOW", label,
-        `${win} 日累計 ${sum == null ? "—" : fmtOku(sum)} 億`,
-        barChart(pts)));
-    });
+    $("#chart-eyebrow").textContent = CATS[cat].eyebrow;
+    $("#chart-title").textContent = CATS[cat].title(win);
 
-    [["上市 融資餘額", "twse_margin"], ["上櫃 融資餘額", "tpex_margin"]]
-      .forEach(([label, key]) => {
-        const pts = cut(S[key]);
-        const last = pts.length ? pts[pts.length - 1].v : null;
-        const chg = W[key];
-        box.append(chartCard("margin", "MARGIN BALANCE", label,
-          `餘額 ${plain(last)} 億　${win} 日增減 ${chg == null ? "—" : fmtOku(chg)} 億`,
-          lineChart(pts, "var(--cat-margin)")));
+    if (cat === "flow") {
+      [["上市", "外資買賣超", "twse_foreign"],
+       ["上市", "投信買賣超", "twse_trust"],
+       ["上櫃", "外資買賣超", "tpex_foreign"],
+       ["上櫃", "投信買賣超", "tpex_trust"]].forEach(([mkt, name, key]) => {
+        const pts = cut(S[key]), sum = W[key];
+        box.append(chartCard("flow", name, mkt,
+          { text: (sum == null ? "—" : signed(sum, 2) + " 億元"), cls: sign(sum) },
+          barChart(pts, "億元", toOku)));
       });
-
-    const oi = cut(S.tx_foreign_oi);
-    const lastOi = oi.length ? oi[oi.length - 1].v : null;
-    box.append(chartCard("oi", "FUTURES OPEN INTEREST", "台指期 外資未平倉淨額",
-      `淨額 ${lastOi == null ? "—" : lastOi.toLocaleString("en-US")} 口　${win} 日增減 ${fmtLots(W.tx_foreign_oi)} 口`,
-      lineChart(oi, "var(--cat-oi)")));
+    } else if (cat === "margin") {
+      [["上市融資餘額", "twse_margin"], ["上櫃融資餘額", "tpex_margin"]]
+        .forEach(([name, key]) => {
+          const pts = cut(S[key]);
+          const last = pts.length ? pts[pts.length - 1].v : null;
+          box.append(chartCard("margin", name, null,
+            { text: plain(last, 2) + " 億元" },
+            lineChart(pts, "億元", "var(--c-margin)", toOku), true));
+        });
+    } else {
+      const pts = cut(S.tx_foreign_oi);
+      const last = pts.length ? pts[pts.length - 1].v : null;
+      box.append(chartCard("oi", "外資未平倉淨額", null,
+        { text: (last == null ? "—" : last.toLocaleString("en-US")) + " 口",
+          cls: sign(last) },
+        lineChart(pts, "口", "var(--c-oi)", asIs), true));
+    }
   }
 
   /* ---------------- 明細表 ---------------- */
@@ -207,17 +302,18 @@
     (DATA.table || []).forEach((r) => {
       const tr = EL("tr");
       tr.append(EL("td", null, r.d));
-      const cell = (v, sep) => tr.append(EL("td", (sep ? "sep " : "") + sign(v), fmtOku(v)));
+      const cell = (v, sep) => tr.append(EL("td", (sep ? "sep " : "") + sign(v), signed(v)));
       cell(r.tw_f, true); cell(r.tw_t); cell(r.tw_d);
       cell(r.tp_f, true); cell(r.tp_t); cell(r.tp_d);
       tr.append(EL("td", "sep", plain(r.tw_m)));
       tr.append(EL("td", null, plain(r.tp_m)));
-      tr.append(EL("td", "sep " + sign(r.oi), r.oi == null ? "—" : r.oi.toLocaleString("en-US")));
+      tr.append(EL("td", "sep " + sign(r.oi),
+        r.oi == null ? "—" : r.oi.toLocaleString("en-US")));
       tb.append(tr);
     });
   }
 
-  /* ---------------- 排行（表格） ---------------- */
+  /* ---------------- 排行 ---------------- */
   function renderRanks() {
     const block = (DATA.rankings || {})[String(rankWin)];
     const note = $("#rank-note");
@@ -246,9 +342,8 @@
         tr.append(EL("td", "rk", String(i + 1)));
         const nm = EL("td", "nm");
         nm.append(EL("code", null, r.c), document.createTextNode(r.n));
-        nm.append(EL("span", "mk", r.m === "TWSE" ? "［市］" : "［櫃］"));
-        tr.append(nm);
-        tr.append(EL("td", "amt num " + cls, fmtOku(r[who], 2)));
+        nm.append(EL("span", "mk", r.m === "TWSE" ? "市" : "櫃"));
+        tr.append(nm, EL("td", "amt " + cls, signed(r[who], 2)));
         tbody.append(tr);
       });
     };
@@ -269,10 +364,7 @@
 
   /* ---------------- 啟動 ---------------- */
   fetch("data/dashboard.json?t=" + Date.now())
-    .then((r) => {
-      if (!r.ok) throw new Error(r.status);
-      return r.json();
-    })
+    .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then((json) => {
       DATA = json;
       renderFeeds(json.status);
@@ -282,9 +374,14 @@
       renderRanks();
       $("#built").textContent = "頁面資料產出時間 " + shortTime(json.built_at);
 
-      wire("#win-switch", "win", (v) => { win = +v; renderCharts(); });
+      $("#win-select").addEventListener("change", (e) => {
+        win = +e.target.value;
+        renderCharts();
+      });
+      wire("#cat-switch", "cat", (v) => { cat = v; renderCharts(); });
       wire("#who-switch", "who", (v) => { who = v; renderRanks(); });
       wire("#rank-switch", "w", (v) => { rankWin = +v; renderRanks(); });
+      addEventListener("scroll", hideTip, { passive: true });
     })
     .catch(() => {
       $("#summary").innerHTML =

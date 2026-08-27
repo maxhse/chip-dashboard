@@ -14,13 +14,8 @@
 <header class="banner">
   <div class="banner-row">
     <div class="brand">
-      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
-        <rect x="4" y="16" width="4" height="12" fill="var(--gold)"/>
-        <rect x="11" y="9" width="4" height="19" fill="var(--gold)"/>
-        <rect x="18" y="13" width="4" height="15" fill="var(--gold)"/>
-        <rect x="25" y="4" width="4" height="24" fill="var(--gold)"/>
-      </svg>
-      <div>
+      <span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <div class="brand-text">
         <h1>籌碼雷達 <span>TAIWAN</span></h1>
         <p class="tagline">上市櫃三大法人 · 融資餘額 · 台指期未平倉</p>
       </div>
@@ -38,27 +33,33 @@
 
 <main>
 
-  <section class="band" id="band-today">
+  <section class="band">
     <div class="eyebrow-row">
       <p class="eyebrow">MARKET POSITIONING</p>
-      <span class="eyebrow" id="today-date">—</span>
+      <span class="date-tag" id="today-date">—</span>
     </div>
-    <h2>台股籌碼總覽</h2>
+    <h2 class="band-title">台股籌碼總覽</h2>
     <div id="summary" class="summary-grid"></div>
   </section>
 
   <section class="band">
     <div class="band-head">
-      <div>
-        <p class="eyebrow">INSTITUTIONAL FLOW</p>
-        <h2>近期趨勢</h2>
+      <div class="ctrl-left">
+        <label class="ctrl-label" for="win-select">觀察區間</label>
+        <select id="win-select" class="select">
+          <option value="5">近 5 日</option>
+          <option value="10" selected>近 10 日</option>
+          <option value="20">近 20 日</option>
+        </select>
       </div>
-      <div class="switch" id="win-switch" role="group" aria-label="觀察區間">
-        <button data-win="5">近 5 日</button>
-        <button data-win="10" class="on">近 10 日</button>
-        <button data-win="20">近 20 日</button>
+      <div class="switch" id="cat-switch" role="group" aria-label="資料類別">
+        <button data-cat="flow" class="on">法人買賣超</button>
+        <button data-cat="margin">融資餘額</button>
+        <button data-cat="oi">未平倉餘額</button>
       </div>
     </div>
+    <p class="eyebrow" id="chart-eyebrow">INSTITUTIONAL FLOW</p>
+    <h2 class="band-title" id="chart-title">近 10 日上市櫃法人買賣超</h2>
     <div id="charts" class="charts"></div>
   </section>
 
@@ -66,7 +67,7 @@
     <div class="band-head">
       <div>
         <p class="eyebrow">PERIOD DETAIL</p>
-        <h2>逐日明細</h2>
+        <h2 class="band-title">逐日明細</h2>
       </div>
       <span class="unit-note">買賣超單位：億元　融資餘額：億元　未平倉：口</span>
     </div>
@@ -75,10 +76,10 @@
         <thead>
           <tr>
             <th rowspan="2" class="c-date">日期</th>
-            <th colspan="3" class="grp cat-flow">上市買賣超</th>
-            <th colspan="3" class="grp cat-flow">上櫃買賣超</th>
-            <th colspan="2" class="grp cat-margin">融資餘額</th>
-            <th rowspan="2" class="grp cat-oi">台指期<br>外資淨額</th>
+            <th colspan="3" class="grp g-flow">上市買賣超</th>
+            <th colspan="3" class="grp g-flow">上櫃買賣超</th>
+            <th colspan="2" class="grp g-margin">融資餘額</th>
+            <th rowspan="2" class="grp g-oi">台指期<br>外資淨額</th>
           </tr>
           <tr>
             <th>外資</th><th>投信</th><th>自營</th>
@@ -95,7 +96,7 @@
     <div class="band-head">
       <div>
         <p class="eyebrow">TOP INSTITUTIONAL PICKS</p>
-        <h2>個股買賣超排行</h2>
+        <h2 class="band-title">個股買賣超排行</h2>
       </div>
       <div class="switch-row">
         <div class="switch" id="who-switch" role="group" aria-label="法人">
@@ -115,20 +116,27 @@
     <div class="ranks">
       <div class="rank-col">
         <h3 class="rank-head buy">買超前 20 名</h3>
-        <table class="rank-table"><tbody id="rank-buy"></tbody></table>
+        <table class="rank-table">
+          <thead><tr><th class="rk">排名</th><th class="nm">代號／股名</th><th class="amt">金額（億元）</th></tr></thead>
+          <tbody id="rank-buy"></tbody>
+        </table>
       </div>
       <div class="rank-col">
         <h3 class="rank-head sell">賣超前 20 名</h3>
-        <table class="rank-table"><tbody id="rank-sell"></tbody></table>
+        <table class="rank-table">
+          <thead><tr><th class="rk">排名</th><th class="nm">代號／股名</th><th class="amt">金額（億元）</th></tr></thead>
+          <tbody id="rank-sell"></tbody>
+        </table>
       </div>
     </div>
     <details class="method">
       <summary>買賣超金額怎麼算的？</summary>
       <p>
         證交所與櫃買中心的官方個股報表只公布<b>買賣超股數</b>，沒有金額欄位。
-        這裡的金額 = 買賣超股數 ×「當日成交均價」（成交金額 ÷ 成交股數），用同一交易日收盤行情反推出來的估算值，
-        不是逐筆成交價加總。跟看盤軟體或聚財網比對過，方向與量級一致，
-        少數金額很接近的個股名次可能會有一兩名的落差，屬於估算方法本身的誤差範圍。
+        這裡的金額 = 買賣超股數 ×「當日成交均價」，均價取自同一交易日的收盤行情，
+        以<b>成交金額 ÷ 成交股數</b>求得，因此是估算值而非逐筆成交價加總。
+        與聚財網等來源比對過，方向與量級一致；少數金額很接近的個股，名次可能會有一兩名的落差，
+        屬於這個估算方法本身的誤差範圍。
       </p>
     </details>
   </section>
@@ -139,6 +147,8 @@
   <p>資料來源：臺灣證券交易所、證券櫃檯買賣中心、臺灣期貨交易所。個股買賣超金額由官方公布之買賣超股數乘上當日成交均價估算，與券商系統會有些微差異。</p>
   <p id="built">—</p>
 </footer>
+
+<div id="tip" class="tip" role="tooltip" aria-hidden="true"></div>
 
 <script src="app.js"></script>
 </body>

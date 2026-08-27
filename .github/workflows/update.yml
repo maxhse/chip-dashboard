@@ -13,6 +13,15 @@ on:
         description: "回補幾個日曆日（留白＝不回補，只做一般更新）"
         required: false
         default: ""
+      force:
+        description: "強制重算已存在的資料（修正計算邏輯後用這個，會覆蓋舊資料）"
+        required: false
+        type: boolean
+        default: false
+      force_fields:
+        description: "強制重算時只動哪些欄位，空白代表全部（例：twse_insti tpex_insti）"
+        required: false
+        default: ""
 
 concurrency:
   group: chip-data
@@ -36,7 +45,10 @@ jobs:
 
       - name: 回補歷史（僅手動觸發且有填天數時）
         if: inputs.backfill != ''
-        run: python scripts/backfill.py "${{ inputs.backfill }}"
+        run: |
+          python scripts/backfill.py "${{ inputs.backfill }}" \
+            ${{ inputs.force == 'true' && '--force' || '' }} \
+            ${{ inputs.force_fields }}
 
       - name: 抓取最新資料
         run: python scripts/update.py

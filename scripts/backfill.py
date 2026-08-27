@@ -1,7 +1,14 @@
-"""回補歷史資料。用法：python scripts/backfill.py 40
+"""回補歷史資料。
 
-第一次部署時跑一次，把過去 N 個日曆日的資料抓回來，
-圖表與 1/3/5/10/20 日排行就不用等累積。對交易所禮貌一點，每天之間停 1 秒。
+用法：
+    python scripts/backfill.py 40                     一般回補，已有資料的欄位會跳過
+    python scripts/backfill.py 40 --force              強制全部重抓，不管有沒有舊資料
+    python scripts/backfill.py 40 --force twse_insti tpex_insti
+                                                        只強制重抓指定的欄位（省時間）
+
+修正計算邏輯之後要用 --force，不然已經存在的舊資料（用錯的邏輯算出來的）
+不會被覆蓋——這是這支腳本原本的設計：正常情況下已有資料就跳過，避免浪費 API 請求，
+但邏輯本身改了的時候，「已經有資料」不代表「資料是對的」。
 """
 from __future__ import annotations
 
@@ -23,8 +30,12 @@ JOBS = [
 
 
 def main() -> None:
-    back = int(sys.argv[1]) if len(sys.argv) > 1 else 40
-    only = sys.argv[2:] or None
+    args = sys.argv[1:]
+    back = int(args[0]) if args and args[0].lstrip("-").isdigit() else 40
+    rest = args[1:] if args and args[0].lstrip("-").isdigit() else args
+    force = "--force" in rest
+    only = [a for a in rest if not a.startswith("--")] or None
+
     s = session()
 
     d = today_tpe()
@@ -37,12 +48,12 @@ def main() -> None:
             for field, fn in JOBS:
                 if only and field not in only:
                     continue
-                if rec.get(field):
+                if rec.get(field) and not force:
                     got.append(f"{field}=skip")
                     continue
                 try:
                     rec[field] = fn(s, d)
-                    got.append(field)
+                    got.append(field + ("*" if force else ""))
                 except Exception as e:  # noqa: BLE001
                     got.append(f"{field}!({str(e)[:40]})")
             if any(rec.get(f) for f, _ in JOBS):

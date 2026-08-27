@@ -1,0 +1,57 @@
+name: 更新籌碼資料
+
+on:
+  schedule:
+    # cron 是 UTC。台北時間 = UTC + 8。
+    # 週一至週五 14:00–18:45（台北）每 15 分鐘
+    - cron: "*/15 6-10 * * 1-5"
+    # 週一至週五 21:05（台北）— 融資餘額約 21:00 更新
+    - cron: "5 13 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      backfill:
+        description: "回補幾個日曆日（留白＝不回補，只做一般更新）"
+        required: false
+        default: ""
+
+concurrency:
+  group: chip-data
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 安裝套件
+        run: pip install --quiet requests
+
+      - name: 回補歷史（僅手動觸發且有填天數時）
+        if: inputs.backfill != ''
+        run: python scripts/backfill.py "${{ inputs.backfill }}"
+
+      - name: 抓取最新資料
+        run: python scripts/update.py
+
+      - name: 產出 dashboard.json
+        run: python scripts/build.py
+
+      - name: 提交變更
+        run: |
+          git config user.name  "chip-bot"
+          git config user.email "chip-bot@users.noreply.github.com"
+          git add data docs/data
+          if git diff --cached --quiet; then
+            echo "沒有資料變動，略過提交"
+          else
+            git commit -m "資料更新 $(TZ=Asia/Taipei date '+%Y-%m-%d %H:%M')"
+            git push
+          fi

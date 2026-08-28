@@ -2,9 +2,9 @@ name: schedule-test
 
 on:
   schedule:
-    - cron: '50 13 * * 1-5'  # 台北 21:50
-    - cron: '55 13 * * 1-5'  # 台北 21:55
-    - cron: '0 14 * * 1-5'   # 台北 22:00
+    - cron: '15 14 * * 1-5'  # 台北 22:15
+    - cron: '22 14 * * 1-5'  # 台北 22:22
+    - cron: '31 14 * * 1-5'  # 台北 22:31
   workflow_dispatch:
 
 jobs:

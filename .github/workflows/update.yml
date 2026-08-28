@@ -1,10 +1,10 @@
-name: 更新籌碼資料v2
+name: 更新籌碼資料v3
 
 on:
   schedule:
-    # 測試用：每 5 分鐘一次，確認排程機制本身能不能正常自動觸發
-    # 確認正常後要記得改回正式時間表，不然會一直每 5 分鐘跑一次
-    - cron: "*/5 * * * *"
+    # 測試用：每 5 分鐘一次。寫法比照你另一個正常運作的 repo（單引號、無 concurrency）
+    # 確認會自動觸發後，再改回正式時段
+    - cron: '*/5 * * * *'
   workflow_dispatch:
     inputs:
       backfill:
@@ -21,10 +21,6 @@ on:
         required: false
         default: ""
 
-concurrency:
-  group: chip-data
-  cancel-in-progress: false
-
 permissions:
   contents: write
 
@@ -36,10 +32,12 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: '3.12'
 
       - name: 安裝套件
-        run: pip install --quiet requests
+        run: |
+          python -m pip install --upgrade pip
+          pip install --quiet requests
 
       - name: 回補歷史（僅手動觸發且有填天數時）
         if: inputs.backfill != ''
@@ -56,12 +54,12 @@ jobs:
 
       - name: 提交變更
         run: |
-          git config user.name  "chip-bot"
-          git config user.email "chip-bot@users.noreply.github.com"
-          git add data docs/data
-          if git diff --cached --quiet; then
+          if git diff --quiet; then
             echo "沒有資料變動，略過提交"
-          else
-            git commit -m "資料更新 $(TZ=Asia/Taipei date '+%Y-%m-%d %H:%M')"
-            git push
+            exit 0
           fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data docs/data
+          git commit -m "資料更新 $(TZ=Asia/Taipei date '+%Y-%m-%d %H:%M')"
+          git push

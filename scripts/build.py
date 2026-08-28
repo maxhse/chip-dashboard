@@ -117,12 +117,13 @@ def main() -> None:
     for d in days[-TABLE_DAYS:]:
         rec = load_json(daily_path(d), {}) or {}
         a, b = rec.get("twse_insti") or {}, rec.get("tpex_insti") or {}
+        tw_margin, tp_margin = rec.get("twse_margin") or {}, rec.get("tpex_margin") or {}
         table.append({
             "d": d,
             "tw_f": a.get("foreign"), "tw_t": a.get("trust"), "tw_d": a.get("dealer"),
             "tp_f": b.get("foreign"), "tp_t": b.get("trust"), "tp_d": b.get("dealer"),
-            "tw_m": (rec.get("twse_margin") or {}).get("balance"),
-            "tp_m": (rec.get("tpex_margin") or {}).get("balance"),
+            "tw_m": tw_margin.get("balance"), "tw_mc": tw_margin.get("change"),
+            "tp_m": tp_margin.get("balance"), "tp_mc": tp_margin.get("change"),
             "oi": (rec.get("taifex_tx") or {}).get("net_oi_lots"),
         })
 

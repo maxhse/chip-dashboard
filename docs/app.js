@@ -284,7 +284,9 @@
       cell(r.tw_f, true); cell(r.tw_t); cell(r.tw_d);
       cell(r.tp_f, true); cell(r.tp_t); cell(r.tp_d);
       tr.append(EL("td", "sep", plain(r.tw_m)));
+      tr.append(EL("td", sign(r.tw_mc), signed(r.tw_mc, 2)));
       tr.append(EL("td", null, plain(r.tp_m)));
+      tr.append(EL("td", sign(r.tp_mc), signed(r.tp_mc, 2)));
       tr.append(EL("td", "sep " + sign(r.oi),
         r.oi == null ? "—" : r.oi.toLocaleString("en-US")));
       tb.append(tr);

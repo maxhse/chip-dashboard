@@ -172,7 +172,7 @@ main{max-width:1180px;margin:0 auto;padding:22px 16px 44px}
 
 /* ---------- 明細表 ---------- */
 .scroller{overflow-x:auto}
-.grid{border-collapse:collapse;width:100%;min-width:820px;font-size:13px}
+.grid{border-collapse:collapse;width:100%;min-width:960px;font-size:13px}
 .grid th,.grid td{padding:7px 10px;text-align:right;white-space:nowrap}
 .grid thead th{font-size:11px;font-weight:500;color:var(--muted);border-bottom:1px solid var(--rule)}
 .grid thead .grp{text-align:center;font-weight:700;color:#fff;padding:6px 10px}

@@ -1,0 +1,19 @@
+{
+ "date": "2026-08-28",
+ "taifex_tx": {
+  "net_oi_lots": -83655,
+  "net_oi_value": -775634509000
+ },
+ "tpex_insti": {
+  "dealer": 392708002,
+  "foreign": 6122120444,
+  "total": 2198689578,
+  "trust": -4316138868
+ },
+ "twse_insti": {
+  "dealer": 4270700165,
+  "foreign": 41587930677,
+  "total": 46817906760,
+  "trust": 959275918
+ }
+}

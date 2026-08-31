@@ -1,48 +1,45 @@
 {
- "_checked_at": "2026-08-31T17:33:23+08:00",
+ "_checked_at": "2026-08-31T17:45:35+08:00",
  "stock_flows": {
   "data_date": "2026-08-31",
-  "error": "2026-08-31: GET failed: https://www.tpex.org.tw/www/zh-tw/afterTrading/dailyQuotes :: 403 Client Error: Forbidden for url: https://www.tpex.org.tw/www/zh-tw/afterTrading/dailyQuotes?date=2026%2F08%2F31&response=json",
-  "failed_at": "2026-08-31T17:33:23+08:00",
+  "error": null,
   "label": "個股買賣超排行",
-  "ok": false,
-  "updated_at": "2026-08-31T17:15:32+08:00"
+  "ok": true,
+  "updated_at": "2026-08-31T17:45:35+08:00"
  },
  "taifex_tx": {
   "data_date": "2026-08-31",
   "error": null,
   "label": "台指期外資未平倉",
   "ok": true,
-  "updated_at": "2026-08-31T17:32:20+08:00"
+  "updated_at": "2026-08-31T17:45:31+08:00"
  },
  "tpex_insti": {
   "data_date": "2026-08-31",
-  "error": "2026-08-31: GET failed: https://www.tpex.org.tw/www/zh-tw/insti/summary :: 403 Client Error: Forbidden for url: https://www.tpex.org.tw/www/zh-tw/insti/summary?type=Daily&date=2026%2F08%2F31&response=json",
-  "failed_at": "2026-08-31T17:31:23+08:00",
+  "error": null,
   "label": "櫃買三大法人",
-  "ok": false,
-  "updated_at": "2026-08-31T17:15:26+08:00"
+  "ok": true,
+  "updated_at": "2026-08-31T17:45:29+08:00"
  },
  "tpex_margin": {
   "data_date": "2026-08-28",
-  "error": "2026-08-31: GET failed: https://www.tpex.org.tw/www/zh-tw/margin/balance :: 403 Client Error: Forbidden for url: https://www.tpex.org.tw/www/zh-tw/margin/balance?date=2026%2F08%2F31&response=json",
-  "failed_at": "2026-08-31T17:32:18+08:00",
+  "error": null,
   "label": "上櫃融資餘額",
-  "ok": false,
-  "updated_at": "2026-08-31T17:15:27+08:00"
+  "ok": true,
+  "updated_at": "2026-08-31T17:45:30+08:00"
  },
  "twse_insti": {
   "data_date": "2026-08-31",
   "error": null,
   "label": "證交所三大法人",
   "ok": true,
-  "updated_at": "2026-08-31T17:30:28+08:00"
+  "updated_at": "2026-08-31T17:45:23+08:00"
  },
  "twse_margin": {
   "data_date": "2026-08-28",
   "error": null,
   "label": "上市融資餘額",
   "ok": true,
-  "updated_at": "2026-08-31T17:31:24+08:00"
+  "updated_at": "2026-08-31T17:45:30+08:00"
  }
 }

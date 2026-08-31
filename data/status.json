@@ -1,10 +1,11 @@
 {
- "_checked_at": "2026-08-31T15:45:31+08:00",
+ "_checked_at": "2026-08-31T16:07:41+08:00",
  "stock_flows": {
   "data_date": "2026-08-28",
-  "error": null,
+  "error": "2026-08-31: T86 無資料",
+  "failed_at": "2026-08-31T16:07:41+08:00",
   "label": "個股買賣超排行",
-  "ok": true,
+  "ok": false,
   "updated_at": "2026-08-31T15:45:31+08:00"
  },
  "taifex_tx": {
@@ -12,20 +13,22 @@
   "error": null,
   "label": "台指期外資未平倉",
   "ok": true,
-  "updated_at": "2026-08-31T15:45:24+08:00"
+  "updated_at": "2026-08-31T16:05:38+08:00"
  },
  "tpex_insti": {
   "data_date": "2026-08-31",
-  "error": null,
+  "error": "2026-08-31: GET failed: https://www.tpex.org.tw/www/zh-tw/insti/summary :: 520 Server Error: <none> for url: https://www.tpex.org.tw/www/zh-tw/insti/summary?type=Daily&date=2026%2F08%2F31&response=json",
+  "failed_at": "2026-08-31T16:03:18+08:00",
   "label": "櫃買三大法人",
-  "ok": true,
+  "ok": false,
   "updated_at": "2026-08-31T15:45:22+08:00"
  },
  "tpex_margin": {
   "data_date": "2026-08-28",
-  "error": null,
+  "error": "2026-08-31: GET failed: https://www.tpex.org.tw/www/zh-tw/margin/balance :: 520 Server Error: <none> for url: https://www.tpex.org.tw/www/zh-tw/margin/balance?date=2026%2F08%2F31&response=json",
+  "failed_at": "2026-08-31T16:05:36+08:00",
   "label": "上櫃融資餘額",
-  "ok": true,
+  "ok": false,
   "updated_at": "2026-08-31T15:45:23+08:00"
  },
  "twse_insti": {
@@ -33,13 +36,13 @@
   "error": null,
   "label": "證交所三大法人",
   "ok": true,
-  "updated_at": "2026-08-31T15:45:21+08:00"
+  "updated_at": "2026-08-31T16:00:37+08:00"
  },
  "twse_margin": {
   "data_date": "2026-08-28",
   "error": null,
   "label": "上市融資餘額",
   "ok": true,
-  "updated_at": "2026-08-31T15:45:23+08:00"
+  "updated_at": "2026-08-31T16:03:19+08:00"
  }
 }

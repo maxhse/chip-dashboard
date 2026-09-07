@@ -1,5 +1,5 @@
 {
- "built_at": "2026-09-05T00:50:51+08:00",
+ "built_at": "2026-09-07T14:01:45+08:00",
  "rankings": {
   "1": {
    "complete": true,
@@ -3551,10 +3551,6 @@
   ],
   "tx_foreign_oi": [
    {
-    "d": "2026-08-10",
-    "v": -89201.0
-   },
-   {
     "d": "2026-08-11",
     "v": -88924.0
    },
@@ -3629,52 +3625,56 @@
    {
     "d": "2026-09-04",
     "v": -82389.0
+   },
+   {
+    "d": "2026-09-07",
+    "v": 0.0
    }
   ]
  },
  "status": {
-  "_checked_at": "2026-09-05T00:50:50+08:00",
+  "_checked_at": "2026-09-07T14:01:44+08:00",
   "stock_flows": {
    "data_date": "2026-09-04",
    "error": null,
    "label": "個股買賣超排行",
    "ok": true,
-   "updated_at": "2026-09-05T00:50:50+08:00"
+   "updated_at": "2026-09-07T14:01:44+08:00"
   },
   "taifex_tx": {
-   "data_date": "2026-09-04",
+   "data_date": "2026-09-07",
    "error": null,
    "label": "台指期外資未平倉",
    "ok": true,
-   "updated_at": "2026-09-05T00:50:41+08:00"
+   "updated_at": "2026-09-07T14:00:49+08:00"
   },
   "tpex_insti": {
    "data_date": "2026-09-04",
    "error": null,
    "label": "櫃買三大法人",
    "ok": true,
-   "updated_at": "2026-09-05T00:50:39+08:00"
+   "updated_at": "2026-09-07T14:00:46+08:00"
   },
   "tpex_margin": {
    "data_date": "2026-09-04",
    "error": null,
    "label": "上櫃融資餘額",
    "ok": true,
-   "updated_at": "2026-09-05T00:50:40+08:00"
+   "updated_at": "2026-09-07T14:00:48+08:00"
   },
   "twse_insti": {
    "data_date": "2026-09-04",
    "error": null,
    "label": "證交所三大法人",
    "ok": true,
-   "updated_at": "2026-09-05T00:50:39+08:00"
+   "updated_at": "2026-09-07T14:00:44+08:00"
   },
   "twse_margin": {
    "data_date": "2026-09-04",
    "error": null,
    "label": "上市融資餘額",
    "ok": true,
-   "updated_at": "2026-09-05T00:50:40+08:00"
+   "updated_at": "2026-09-07T14:00:46+08:00"
   }
  },
  "summary": {
@@ -3687,16 +3687,30 @@
    "twse_foreign": "2026-09-04",
    "twse_margin": "2026-09-04",
    "twse_trust": "2026-09-04",
-   "tx_foreign_oi": "2026-09-04"
+   "tx_foreign_oi": "2026-09-07"
   },
   "tpex_margin_change": 2081298000.0,
   "twse_foreign": 56212953803.0,
   "twse_margin_change": 3155281000.0,
   "twse_trust": -910866463.0,
-  "tx_foreign_oi": -82389.0,
-  "tx_foreign_oi_change": -814.0
+  "tx_foreign_oi": 0.0,
+  "tx_foreign_oi_change": 82389.0
  },
  "table": [
+  {
+   "d": "2026-09-07",
+   "oi": 0,
+   "tp_d": null,
+   "tp_f": null,
+   "tp_m": null,
+   "tp_mc": null,
+   "tp_t": null,
+   "tw_d": null,
+   "tw_f": null,
+   "tw_m": null,
+   "tw_mc": null,
+   "tw_t": null
+  },
   {
    "d": "2026-09-04",
    "oi": -82389,
@@ -3962,20 +3976,6 @@
    "tw_m": 544151977000,
    "tw_mc": -1143584000,
    "tw_t": 3224067733
-  },
-  {
-   "d": "2026-08-10",
-   "oi": -89201,
-   "tp_d": 219018495,
-   "tp_f": -7633559578,
-   "tp_m": 176995575000,
-   "tp_mc": 1781850000,
-   "tp_t": 3681881810,
-   "tw_d": 18468154345,
-   "tw_f": 51740515132,
-   "tw_m": 545295561000,
-   "tw_mc": 7631051000,
-   "tw_t": 3401069421
   }
  ],
  "windows": {
@@ -3986,7 +3986,7 @@
    "twse_foreign": 56212953803.0,
    "twse_margin": 3155281000.0,
    "twse_trust": -910866463.0,
-   "tx_foreign_oi": -814.0
+   "tx_foreign_oi": 82389.0
   },
   "10": {
    "tpex_foreign": -743407637.0,
@@ -3995,7 +3995,7 @@
    "twse_foreign": 39966525795.0,
    "twse_margin": 34955266000.0,
    "twse_trust": 6644516246.0,
-   "tx_foreign_oi": 205.0
+   "tx_foreign_oi": 82529.0
   },
   "20": {
    "tpex_foreign": -56926865781.0,
@@ -4004,7 +4004,7 @@
    "twse_foreign": 273547468211.0,
    "twse_margin": 44230078000.0,
    "twse_trust": -8480081747.0,
-   "tx_foreign_oi": 5522.0
+   "tx_foreign_oi": 89201.0
   },
   "3": {
    "tpex_foreign": -13536930183.0,
@@ -4013,7 +4013,7 @@
    "twse_foreign": -83287513053.0,
    "twse_margin": 3779130000.0,
    "twse_trust": -3745012063.0,
-   "tx_foreign_oi": -3683.0
+   "tx_foreign_oi": 85329.0
   },
   "5": {
    "tpex_foreign": -6792664099.0,
@@ -4022,7 +4022,7 @@
    "twse_foreign": -70972258032.0,
    "twse_margin": 14717052000.0,
    "twse_trust": 5854812795.0,
-   "tx_foreign_oi": 1266.0
+   "tx_foreign_oi": 82970.0
   }
  }
 }

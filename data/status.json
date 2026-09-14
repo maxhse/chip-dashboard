@@ -1,9 +1,9 @@
 {
- "_checked_at": "2026-09-14T16:03:34+08:00",
+ "_checked_at": "2026-09-14T16:18:27+08:00",
  "stock_flows": {
   "data_date": "2026-09-11",
-  "error": "2026-09-14: T86 無資料",
-  "failed_at": "2026-09-14T16:03:34+08:00",
+  "error": "2026-09-14: GET failed: https://www.tpex.org.tw/www/zh-tw/afterTrading/dailyQuotes :: HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /www/zh-tw/afterTrading/dailyQuotes?date=2026%2F09%2F14&response=json (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+  "failed_at": "2026-09-14T16:18:27+08:00",
   "label": "個股買賣超排行",
   "ok": false,
   "updated_at": "2026-09-12T01:00:35+08:00"
@@ -13,12 +13,12 @@
   "error": null,
   "label": "台指期外資未平倉",
   "ok": true,
-  "updated_at": "2026-09-14T16:02:42+08:00"
+  "updated_at": "2026-09-14T16:17:22+08:00"
  },
  "tpex_insti": {
   "data_date": "2026-09-11",
   "error": "2026-09-14: GET failed: https://www.tpex.org.tw/www/zh-tw/insti/summary :: HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /www/zh-tw/insti/summary?type=Daily&date=2026%2F09%2F14&response=json (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-  "failed_at": "2026-09-14T16:01:42+08:00",
+  "failed_at": "2026-09-14T16:16:25+08:00",
   "label": "櫃買三大法人",
   "ok": false,
   "updated_at": "2026-09-14T15:00:45+08:00"
@@ -26,7 +26,7 @@
  "tpex_margin": {
   "data_date": "2026-09-11",
   "error": "2026-09-14: GET failed: https://www.tpex.org.tw/www/zh-tw/margin/balance :: HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /www/zh-tw/margin/balance?date=2026%2F09%2F14&response=json (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-  "failed_at": "2026-09-14T16:02:40+08:00",
+  "failed_at": "2026-09-14T16:17:21+08:00",
   "label": "上櫃融資餘額",
   "ok": false,
   "updated_at": "2026-09-14T15:46:27+08:00"
@@ -36,13 +36,13 @@
   "error": null,
   "label": "證交所三大法人",
   "ok": true,
-  "updated_at": "2026-09-14T16:00:44+08:00"
+  "updated_at": "2026-09-14T16:15:30+08:00"
  },
  "twse_margin": {
   "data_date": "2026-09-11",
   "error": null,
   "label": "上市融資餘額",
   "ok": true,
-  "updated_at": "2026-09-14T16:01:42+08:00"
+  "updated_at": "2026-09-14T16:16:25+08:00"
  }
 }

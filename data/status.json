@@ -1,31 +1,34 @@
 {
- "_checked_at": "2026-09-12T01:00:35+08:00",
+ "_checked_at": "2026-09-14T14:03:38+08:00",
  "stock_flows": {
   "data_date": "2026-09-11",
-  "error": null,
+  "error": "2026-09-14: T86 無資料",
+  "failed_at": "2026-09-14T14:03:38+08:00",
   "label": "個股買賣超排行",
-  "ok": true,
+  "ok": false,
   "updated_at": "2026-09-12T01:00:35+08:00"
  },
  "taifex_tx": {
-  "data_date": "2026-09-11",
+  "data_date": "2026-09-14",
   "error": null,
   "label": "台指期外資未平倉",
   "ok": true,
-  "updated_at": "2026-09-12T01:00:29+08:00"
+  "updated_at": "2026-09-14T14:02:40+08:00"
  },
  "tpex_insti": {
   "data_date": "2026-09-11",
-  "error": null,
+  "error": "2026-09-14: GET failed: https://www.tpex.org.tw/www/zh-tw/insti/summary :: HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /www/zh-tw/insti/summary?type=Daily&date=2026%2F09%2F14&response=json (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+  "failed_at": "2026-09-14T14:01:42+08:00",
   "label": "櫃買三大法人",
-  "ok": true,
+  "ok": false,
   "updated_at": "2026-09-12T01:00:27+08:00"
  },
  "tpex_margin": {
   "data_date": "2026-09-11",
-  "error": null,
+  "error": "2026-09-14: GET failed: https://www.tpex.org.tw/www/zh-tw/margin/balance :: HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /www/zh-tw/margin/balance?date=2026%2F09%2F14&response=json (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+  "failed_at": "2026-09-14T14:02:39+08:00",
   "label": "上櫃融資餘額",
-  "ok": true,
+  "ok": false,
   "updated_at": "2026-09-12T01:00:28+08:00"
  },
  "twse_insti": {
@@ -33,13 +36,13 @@
   "error": null,
   "label": "證交所三大法人",
   "ok": true,
-  "updated_at": "2026-09-12T01:00:26+08:00"
+  "updated_at": "2026-09-14T14:00:46+08:00"
  },
  "twse_margin": {
   "data_date": "2026-09-11",
   "error": null,
   "label": "上市融資餘額",
   "ok": true,
-  "updated_at": "2026-09-12T01:00:27+08:00"
+  "updated_at": "2026-09-14T14:01:44+08:00"
  }
 }

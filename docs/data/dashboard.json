@@ -1,5 +1,5 @@
 {
- "built_at": "2026-09-14T14:48:17+08:00",
+ "built_at": "2026-09-14T15:01:56+08:00",
  "rankings": {
   "1": {
    "complete": true,
@@ -3628,16 +3628,16 @@
    },
    {
     "d": "2026-09-14",
-    "v": 0.0
+    "v": -82658.0
    }
   ]
  },
  "status": {
-  "_checked_at": "2026-09-14T14:48:16+08:00",
+  "_checked_at": "2026-09-14T15:01:55+08:00",
   "stock_flows": {
    "data_date": "2026-09-11",
    "error": "2026-09-14: T86 無資料",
-   "failed_at": "2026-09-14T14:48:16+08:00",
+   "failed_at": "2026-09-14T15:01:55+08:00",
    "label": "個股買賣超排行",
    "ok": false,
    "updated_at": "2026-09-12T01:00:35+08:00"
@@ -3647,37 +3647,35 @@
    "error": null,
    "label": "台指期外資未平倉",
    "ok": true,
-   "updated_at": "2026-09-14T14:47:21+08:00"
+   "updated_at": "2026-09-14T15:00:55+08:00"
   },
   "tpex_insti": {
    "data_date": "2026-09-11",
-   "error": "2026-09-14: GET failed: https://www.tpex.org.tw/www/zh-tw/insti/summary :: HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /www/zh-tw/insti/summary?type=Daily&date=2026%2F09%2F14&response=json (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-   "failed_at": "2026-09-14T14:46:24+08:00",
+   "error": null,
    "label": "櫃買三大法人",
-   "ok": false,
-   "updated_at": "2026-09-12T01:00:27+08:00"
+   "ok": true,
+   "updated_at": "2026-09-14T15:00:45+08:00"
   },
   "tpex_margin": {
    "data_date": "2026-09-11",
-   "error": "2026-09-14: GET failed: https://www.tpex.org.tw/www/zh-tw/margin/balance :: HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /www/zh-tw/margin/balance?date=2026%2F09%2F14&response=json (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-   "failed_at": "2026-09-14T14:47:19+08:00",
+   "error": null,
    "label": "上櫃融資餘額",
-   "ok": false,
-   "updated_at": "2026-09-12T01:00:28+08:00"
+   "ok": true,
+   "updated_at": "2026-09-14T15:00:46+08:00"
   },
   "twse_insti": {
    "data_date": "2026-09-11",
    "error": null,
    "label": "證交所三大法人",
    "ok": true,
-   "updated_at": "2026-09-14T14:45:29+08:00"
+   "updated_at": "2026-09-14T15:00:44+08:00"
   },
   "twse_margin": {
    "data_date": "2026-09-11",
    "error": null,
    "label": "上市融資餘額",
    "ok": true,
-   "updated_at": "2026-09-14T14:46:25+08:00"
+   "updated_at": "2026-09-14T15:00:46+08:00"
   }
  },
  "summary": {
@@ -3696,13 +3694,13 @@
   "twse_foreign": -89270444926.0,
   "twse_margin_change": -4026507000.0,
   "twse_trust": 8213725742.0,
-  "tx_foreign_oi": 0.0,
-  "tx_foreign_oi_change": 85067.0
+  "tx_foreign_oi": -82658.0,
+  "tx_foreign_oi_change": 2409.0
  },
  "table": [
   {
    "d": "2026-09-14",
-   "oi": 0,
+   "oi": -82658,
    "tp_d": null,
    "tp_f": null,
    "tp_m": null,
@@ -3989,7 +3987,7 @@
    "twse_foreign": -89270444926.0,
    "twse_margin": -4026507000.0,
    "twse_trust": 8213725742.0,
-   "tx_foreign_oi": 85067.0
+   "tx_foreign_oi": 2409.0
   },
   "10": {
    "tpex_foreign": -30715482376.0,
@@ -3998,7 +3996,7 @@
    "twse_foreign": -76076178703.0,
    "twse_margin": 20693644000.0,
    "twse_trust": 20984884690.0,
-   "tx_foreign_oi": 82970.0
+   "tx_foreign_oi": 312.0
   },
   "20": {
    "tpex_foreign": -50655801225.0,
@@ -4007,7 +4005,7 @@
    "twse_foreign": 62307690123.0,
    "twse_margin": 40811862000.0,
    "twse_trust": -8722281302.0,
-   "tx_foreign_oi": 83474.0
+   "tx_foreign_oi": 816.0
   },
   "3": {
    "tpex_foreign": -14386099570.0,
@@ -4016,7 +4014,7 @@
    "twse_foreign": -106680221995.0,
    "twse_margin": 1604204000.0,
    "twse_trust": 13649132100.0,
-   "tx_foreign_oi": 81066.0
+   "tx_foreign_oi": -1592.0
   },
   "5": {
    "tpex_foreign": -23922818277.0,
@@ -4025,7 +4023,7 @@
    "twse_foreign": -5103920671.0,
    "twse_margin": 5976592000.0,
    "twse_trust": 15130071895.0,
-   "tx_foreign_oi": 79399.0
+   "tx_foreign_oi": -3259.0
   }
  }
 }

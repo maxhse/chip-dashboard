@@ -1,9 +1,9 @@
 {
- "_checked_at": "2026-09-14T17:26:57+08:00",
+ "_checked_at": "2026-09-14T17:33:43+08:00",
  "stock_flows": {
   "data_date": "2026-09-11",
-  "error": "2026-09-14: GET failed: https://www.twse.com.tw/rwd/zh/fund/T86 :: Expecting value: line 1 column 1 (char 0)",
-  "failed_at": "2026-09-14T17:26:57+08:00",
+  "error": "2026-09-14: GET failed: https://www.tpex.org.tw/www/zh-tw/afterTrading/dailyQuotes :: HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /www/zh-tw/afterTrading/dailyQuotes?date=2026%2F09%2F14&response=json (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+  "failed_at": "2026-09-14T17:33:43+08:00",
   "label": "個股買賣超排行",
   "ok": false,
   "updated_at": "2026-09-12T01:00:35+08:00"
@@ -13,12 +13,12 @@
   "error": null,
   "label": "台指期外資未平倉",
   "ok": true,
-  "updated_at": "2026-09-14T17:25:52+08:00"
+  "updated_at": "2026-09-14T17:32:43+08:00"
  },
  "tpex_insti": {
   "data_date": "2026-09-11",
   "error": "2026-09-14: GET failed: https://www.tpex.org.tw/www/zh-tw/insti/summary :: HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /www/zh-tw/insti/summary?type=Daily&date=2026%2F09%2F14&response=json (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-  "failed_at": "2026-09-14T17:24:54+08:00",
+  "failed_at": "2026-09-14T17:31:46+08:00",
   "label": "櫃買三大法人",
   "ok": false,
   "updated_at": "2026-09-14T15:00:45+08:00"
@@ -26,7 +26,7 @@
  "tpex_margin": {
   "data_date": "2026-09-11",
   "error": "2026-09-14: GET failed: https://www.tpex.org.tw/www/zh-tw/margin/balance :: HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /www/zh-tw/margin/balance?date=2026%2F09%2F14&response=json (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
-  "failed_at": "2026-09-14T17:25:51+08:00",
+  "failed_at": "2026-09-14T17:32:42+08:00",
   "label": "上櫃融資餘額",
   "ok": false,
   "updated_at": "2026-09-14T15:46:27+08:00"
@@ -36,13 +36,13 @@
   "error": null,
   "label": "證交所三大法人",
   "ok": true,
-  "updated_at": "2026-09-14T17:23:57+08:00"
+  "updated_at": "2026-09-14T17:30:50+08:00"
  },
  "twse_margin": {
   "data_date": "2026-09-11",
   "error": null,
   "label": "上市融資餘額",
   "ok": true,
-  "updated_at": "2026-09-14T17:24:55+08:00"
+  "updated_at": "2026-09-14T17:31:47+08:00"
  }
 }

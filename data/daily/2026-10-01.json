@@ -3,5 +3,17 @@
  "taifex_tx": {
   "net_oi_lots": -79554,
   "net_oi_value": -774905393000
+ },
+ "tpex_insti": {
+  "dealer": 145351079,
+  "foreign": -6912921830,
+  "total": -9338631615,
+  "trust": -2571060864
+ },
+ "twse_insti": {
+  "dealer": 1658991836,
+  "foreign": 21937328872,
+  "total": 29252946760,
+  "trust": 5656626052
  }
 }

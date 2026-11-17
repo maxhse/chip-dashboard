@@ -1,7 +1,19 @@
 {
  "date": "2026-11-17",
  "taifex_tx": {
-  "net_oi_lots": 0,
-  "net_oi_value": 0
+  "net_oi_lots": -97896,
+  "net_oi_value": -785252740000
+ },
+ "tpex_insti": {
+  "dealer": 233651163,
+  "foreign": 5903442168,
+  "total": 3687010184,
+  "trust": -2450083147
+ },
+ "twse_insti": {
+  "dealer": -15696495525,
+  "foreign": -38093637437,
+  "total": -54725093711,
+  "trust": -934960749
  }
 }
